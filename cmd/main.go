@@ -2,6 +2,7 @@ package main
 
 import (
 	"github.com/gin-gonic/gin"
+	"github.com/gin-gonic/gin/binding"
 	"net/http"
 	"time"
 )
@@ -13,30 +14,40 @@ type RequestBody struct {
 func handler(c *gin.Context) {
 	var reqBody RequestBody
 
-	// Bind json
-	if err := c.ShouldBindJSON(&reqBody); err != nil {
-		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": "invalid request"})
+	err := c.ShouldBindBodyWith(&reqBody, binding.JSON)
+	if err != nil {
+		c.AbortWithStatusJSON(400, gin.H{
+			"error": err.Error(),
+		})
 		return
 	}
 
 	// Build dateDir
 	dateTime := time.Now().Format("2006-01-02T15:04:05.000Z")
 	dateDir := Config.OutputDir + "/" + dateTime[:10]
-	fullDir := dateDir + "/" + dateTime[11:22] + ".log"
+	logDir := dateDir + "/" + dateTime[11:22] + "-log"
 
 	// Actions
 	switch reqBody.Action {
 	case "SendEmail":
-		sendEmail(c, dateDir, fullDir)
+		mailErr := sendEmail(c, dateDir, logDir)
+
+		if mailErr != nil {
+			c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
+				"error": err.Error(),
+			})
+			return
+		}
+
+		break
 	case "SendRawEmail":
-		sendRawEmail(c, dateDir, fullDir)
+		sendRawEmail(c, dateDir, logDir)
+
+		break
 	default:
 		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": "unsupported action"})
 		return
 	}
-
-	// Success
-	c.JSON(http.StatusOK, gin.H{"message": "success"})
 }
 
 func main() {
