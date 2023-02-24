@@ -14,6 +14,7 @@ type RequestBody struct {
 func handler(c *gin.Context) {
 	var reqBody RequestBody
 
+	// Bind json
 	err := c.ShouldBindBodyWith(&reqBody, binding.JSON)
 	if err != nil {
 		c.AbortWithStatusJSON(400, gin.H{

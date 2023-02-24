@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/gin-gonic/gin/binding"
-	"io/ioutil"
 	"net/http"
 	"os"
 	"path/filepath"
@@ -55,13 +54,13 @@ func sendEmail(c *gin.Context, dataDir string, logDir string) error {
 	}
 
 	// Write html data to dataDir/body.html
-	err = ioutil.WriteFile(filepath.Join(logDir, "body.html"), []byte(request.Message.Body.Html.Data), 0644)
+	err = os.WriteFile(filepath.Join(logDir, "body.html"), []byte(request.Message.Body.Html.Data), 0644)
 	if err != nil {
 		return err
 	}
 
 	// Write body to dataDir/body.txt
-	err = ioutil.WriteFile(filepath.Join(logDir, "body.txt"), []byte(request.Message.Body.Text.Data), 0644)
+	err = os.WriteFile(filepath.Join(logDir, "body.txt"), []byte(request.Message.Body.Text.Data), 0644)
 	if err != nil {
 		return err
 	}
@@ -75,13 +74,13 @@ func sendEmail(c *gin.Context, dataDir string, logDir string) error {
 		strings.Join(request.ReplyToAddresses, ","),
 		request.Source,
 	)
-	err = ioutil.WriteFile(filepath.Join(logDir, "headers.txt"), []byte(headers), 0644)
+	err = os.WriteFile(filepath.Join(logDir, "headers.txt"), []byte(headers), 0644)
 	if err != nil {
 		return err
 	}
 
 	// Read file from templates/success.txt
-	successTemplate, err := ioutil.ReadFile("templates/success.txt")
+	successTemplate, err := os.ReadFile("templates/success.txt")
 	if err != nil {
 		return err
 	}
