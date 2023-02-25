@@ -1,6 +1,7 @@
 package internal
 
 import (
+	"errors"
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/gin-gonic/gin/binding"
@@ -51,6 +52,15 @@ func SendEmail(c *gin.Context, dataDir string, logDir string) error {
 		return err
 	}
 
+	// Validation
+	if !(request.Source != "" &&
+		request.Message.Subject.Data != "" &&
+		(request.Message.Body.Html.Data != "" || request.Message.Body.Text.Data != "") &&
+		len(request.Destination.ToAddresses) > 0) {
+
+		return errors.New("one or more required fields was not sent")
+	}
+
 	// Mkdir dataDir and logDir
 	err = os.Mkdir(dataDir, 0755)
 	if err != nil && os.IsNotExist(err) {
@@ -63,18 +73,18 @@ func SendEmail(c *gin.Context, dataDir string, logDir string) error {
 	}
 
 	// Write html data to dataDir/body.html
-	err = os.WriteFile(filepath.Join(logDir, "body.html"), []byte(request.Message.Body.Html.Data), 0755)
+	err = writeFileContent(filepath.Join(logDir, "body.html"), []byte(request.Message.Body.Html.Data))
 	if err != nil {
 		return err
 	}
 
 	// Write body to dataDir/body.txt
-	err = os.WriteFile(filepath.Join(logDir, "body.txt"), []byte(request.Message.Body.Text.Data), 0755)
+	err = writeFileContent(filepath.Join(logDir, "body.txt"), []byte(request.Message.Body.Text.Data))
 	if err != nil {
 		return err
 	}
 
-	// Write headers (Subject Data, ToAddress, CCAddresses, BccAddresses, ReplyToAddresses, Source) to dataDir/headers.txt
+	// Write headers to dataDir/headers.txt
 	headers := fmt.Sprintf("Subject: %s\nTo: %s\nCc: %s\nBcc: %s\nReply-To: %s\nFrom: %s\n",
 		request.Message.Subject.Data,
 		strings.Join(request.Destination.ToAddresses, ","),
@@ -83,7 +93,7 @@ func SendEmail(c *gin.Context, dataDir string, logDir string) error {
 		strings.Join(request.ReplyToAddresses, ","),
 		request.Source,
 	)
-	err = os.WriteFile(filepath.Join(logDir, "headers.txt"), []byte(headers), 0755)
+	err = writeFileContent(filepath.Join(logDir, "headers.txt"), []byte(headers))
 	if err != nil {
 		return err
 	}
