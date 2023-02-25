@@ -2,7 +2,7 @@
 
 Example Json for SendMail:
 
-```
+`
 {
     "Action": "SendEmail",
     "Destination": {
@@ -34,4 +34,4 @@ Example Json for SendMail:
         "reply-to@example.com"
     ]
 }
-```
+`
