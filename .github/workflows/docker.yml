@@ -28,8 +28,11 @@ jobs:
         uses: gittools/actions/gitversion/execute@v0.9.15
 
       - name: Build Docker Image
-        if: github.ref == 'refs/heads/master'
         run: |
           export DOCKER_TAG=ghcr.io/askrella/aws-ses-mock:${{ steps.gitversion.outputs.semVer }}
           docker build . -t $DOCKER_TAG
+
+      - name: Push Docker Image
+        if: github.ref == 'refs/heads/master'
+        run: |
           docker push $DOCKER_TAG
