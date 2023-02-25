@@ -2,7 +2,7 @@
 
 Example Json for SendMail:
 
-```json
+```
 {
     "Action": "SendEmail",
     "Destination": {
