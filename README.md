@@ -11,7 +11,7 @@
 We created this project as a new version of aws-ses-local, which doesn't seem to be maintained for a few years.
 Our goal is to provide more features, small containers and be more accurate than the alternatives.
 
-# Tutorial
+# :gear: Getting Started
 
 ## Running the Docker Container
 
@@ -85,7 +85,16 @@ The `POST` endpoint is available under `http://localhost:8080/` and should conta
 }
 ```
 
-# Contributors
+## :test_tube: Running Tests
+
+To run tests, run the following command
+
+```bash
+  go test ./internal/*
+```
+
+
+# :wave: Contributors
 
 <a href="https://github.com/askrella/aws-ses-mock/graphs/contributors">
   <img src="https://contrib.rocks/image?repo=askrella/aws-ses-mock" />
@@ -95,6 +104,11 @@ The `POST` endpoint is available under `http://localhost:8080/` and should conta
   * [Steve](https://github.com/steve-hb) (Maintainer)
   * [Navo](https://github.com/navopw) (Maintainer)
 
-# Contact
+Feel free to open a new pull request with changes or create an issue here on GitHub! :)
+
+# :warning: License
+Distributed under the MIT License. See LICENSE.txt for more information.
+
+# :handshake: Contact Us
 
 In case you need professional support, feel free to <a href="mailto:contact@askrella.de">contact us</a>
