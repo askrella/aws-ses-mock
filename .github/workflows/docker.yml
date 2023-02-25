@@ -35,4 +35,5 @@ jobs:
       - name: Push Docker Image
         if: github.ref == 'refs/heads/master'
         run: |
+          export DOCKER_TAG=ghcr.io/askrella/aws-ses-mock:${{ steps.gitversion.outputs.semVer }}
           docker push $DOCKER_TAG
