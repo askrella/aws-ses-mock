@@ -1,5 +1,9 @@
 # AWS SES Mock
 
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+![Docker](https://github.com/askrella/whatsapp-chatgpt/actions/workflows/docker.yml/badge.svg)
+![Build](https://img.shields.io/github/actions/workflow/status/askrella/aws-ses-mock/docker.yml?branch=master)
+
 Example Json for SendMail:
 
 ```json
