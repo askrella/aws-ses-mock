@@ -7,20 +7,23 @@ COPY go.sum go.sum
 
 RUN go mod download
 
-COPY ./cmd ./main
+COPY ./cmd ./cmd
+COPY ./internal ./internal
+COPY ./templates ./templates
 
 RUN apk add tree
 RUN tree
 
-RUN go build -o ./main ./main/main.go
+RUN go build -o ./main ./cmd/main.go
+RUN mkdir /build && \
+    mv main /build/main
 
 FROM alpine:2.6
 
-USER nonroo:nonroot
 WORKDIR /app
-
 COPY --from=Build /build/main /app/main
 
-EXPOSE 8080
+ENV GIN_MODE=release
 
+EXPOSE 8080
 ENTRYPOINT [ "/app/main" ]

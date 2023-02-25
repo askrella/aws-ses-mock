@@ -3,6 +3,7 @@ package internal
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/gin-gonic/gin/binding"
+	"github.com/sirupsen/logrus"
 	"net/http"
 	"time"
 )
@@ -52,6 +53,7 @@ func handler(c *gin.Context) {
 }
 
 func StartServer() {
+	logrus.Info("Starting mock server under port 8080")
 	// Read environment variables
 	ReadConfigFromEnv()
 

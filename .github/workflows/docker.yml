@@ -1,0 +1,31 @@
+name: Continuous Delivery
+on:
+  push:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      actions: read
+      contents: read
+      security-events: write
+    concurrency:
+      group: ${{ github.ref }}
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Install GitVersion
+        uses: gittools/actions/gitversion/setup@v0.9.15
+        with:
+          versionSpec: '5.x'
+          includePrerelease: true
+
+      - run: git fetch --unshallow
+
+      - name: Determine Version
+        id:   gitversion
+        uses: gittools/actions/gitversion/execute@v0.9.15
+
+      - name: Build Docker Image
+        run: docker build . -t askrella/aws-ses-mock:${{ steps.gitversion.outputs.semVer }}
