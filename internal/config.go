@@ -1,4 +1,4 @@
-package main
+package internal
 
 import (
 	"fmt"
@@ -12,7 +12,7 @@ type ConfigType struct {
 
 var Config ConfigType
 
-func readConfigFromEnv() {
+func ReadConfigFromEnv() {
 	Config = ConfigType{}
 	if err := env.Parse(&Config); err != nil {
 		fmt.Printf("%+v\n", err)
