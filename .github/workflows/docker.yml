@@ -36,7 +36,8 @@ jobs:
         uses: gittools/actions/gitversion/execute@v0.9.15
         with:
           increment: Patch
-          mode: mainline
+          useConfigFile: true
+          configFilePath: GitVersion.yml
 
       # Install the cosign tool except on PR
       # https://github.com/sigstore/cosign-installer
