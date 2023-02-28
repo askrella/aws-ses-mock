@@ -28,6 +28,7 @@ jobs:
         with:
           versionSpec: '5.x'
           includePrerelease: true
+          increment: Patch
 
       - run: git fetch --unshallow
 
