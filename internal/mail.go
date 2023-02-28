@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/gin-gonic/gin/binding"
+	"github.com/sirupsen/logrus"
 	"net/http"
 	"os"
 	"path/filepath"
@@ -57,6 +58,8 @@ func SendEmail(c *gin.Context, dataDir string, logDir string) error {
 		request.Message.Subject.Data != "" &&
 		(request.Message.Body.Html.Data != "" || request.Message.Body.Text.Data != "") &&
 		len(request.Destination.ToAddresses) > 0) {
+
+		LogValidationErrors(&request)
 
 		return errors.New("one or more required fields was not sent")
 	}
@@ -113,6 +116,31 @@ func SendEmail(c *gin.Context, dataDir string, logDir string) error {
 	return nil
 }
 
-func SendRawEmail(c *gin.Context, dateDir string, logFilePath string) {
+func LogValidationErrors(request *SendEmailRequest) {
+	// Check if ToAddresses is provided
+	if len(request.Destination.ToAddresses) < 0 {
+		logrus.Info("ToAddresses is not provided")
+	}
 
+	if request.Source == "" {
+		logrus.Error("Source was not provided")
+	}
+
+	// Check if Subject is provided
+	if request.Message.Subject.Data == "" {
+		logrus.Error("Subject.Data was not provided")
+	}
+
+	// Check if Body.Html.Data or Body.Text.Data is provided
+	if request.Message.Body.Html.Data == "" && request.Message.Body.Text.Data == "" {
+		logrus.Error("Body.Html.Data or Body.Text.Data was not provided")
+	}
+}
+
+func SendRawEmail(c *gin.Context, dateDir string, logFilePath string) {
+	// TODO
+
+	c.JSON(http.StatusNotImplemented, gin.H{
+		"message": "Not implemented",
+	})
 }
