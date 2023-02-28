@@ -28,13 +28,15 @@ jobs:
         with:
           versionSpec: '5.x'
           includePrerelease: true
-          increment: Patch
 
       - run: git fetch --unshallow
 
       - name: Determine Version
         id:   gitversion
         uses: gittools/actions/gitversion/execute@v0.9.15
+        with:
+          increment: Patch
+          mode: mainline
 
       # Install the cosign tool except on PR
       # https://github.com/sigstore/cosign-installer
