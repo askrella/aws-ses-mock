@@ -25,7 +25,7 @@ Using the AWS SDK you can set the endpoint for SES manually by specifying the en
 
 ```javascript
 import AWS from 'aws-sdk'
-const ses = new AWS.SES({ region: 'us-east-1', endpoint: 'http://localhost:9001' })
+const ses = new AWS.SES({ region: 'us-east-1', endpoint: 'http://localhost:8080' })
 ```
 
 ## Usage with Golang
