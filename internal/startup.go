@@ -5,6 +5,7 @@ import (
 	"github.com/gin-gonic/gin/binding"
 	"github.com/sirupsen/logrus"
 	"net/http"
+	"strconv"
 	"time"
 )
 
@@ -62,7 +63,7 @@ func StartServer() {
 	r.POST("/", handler)
 
 	// Run
-	err := r.Run()
+	err := r.Run(":" + strconv.Itoa(Config.Port))
 	if err != nil {
 		panic(err)
 	}

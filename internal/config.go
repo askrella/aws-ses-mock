@@ -7,6 +7,7 @@ import (
 )
 
 type ConfigType struct {
+	Port      int    `env:"PORT" envDefault:"8080"`
 	OutputDir string `env:"OUTPUT_DIR"`
 }
 
