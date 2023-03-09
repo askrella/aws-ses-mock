@@ -46,10 +46,10 @@ type SendEmailRequest struct {
 	ReplyToAddresses []string    `json:"ReplyToAddresses"`
 }
 
-func deserializeSendEmailRequest(reqBody string) (SendEmailRequest, error) {
+func deserializeSendEmailRequest(reqBody string) (*SendEmailRequest, error) {
 	queryValues, err := url.ParseQuery(reqBody)
 	if err != nil {
-		// handle error
+		return nil, err
 	}
 
 	toAddresses := []string{queryValues.Get("Destination.ToAddresses.member.1")}
@@ -75,7 +75,7 @@ func deserializeSendEmailRequest(reqBody string) (SendEmailRequest, error) {
 
 	for _, address := range toAddresses {
 		if isEmailInvalid(address) {
-			return SendEmailRequest{}, errors.New("To-Address is invalid: " + address)
+			return nil, errors.New("To-Address is invalid: " + address)
 		}
 	}
 
@@ -84,7 +84,7 @@ func deserializeSendEmailRequest(reqBody string) (SendEmailRequest, error) {
 		sendEmailRequest.Destination.CcAddresses = ccAddresses
 		for _, address := range ccAddresses {
 			if isEmailInvalid(address) {
-				return SendEmailRequest{}, errors.New("CC-Address is invalid: " + address)
+				return nil, errors.New("CC-Address is invalid: " + address)
 			}
 		}
 	}
@@ -93,7 +93,7 @@ func deserializeSendEmailRequest(reqBody string) (SendEmailRequest, error) {
 		sendEmailRequest.Destination.BccAddresses = bccAddresses
 		for _, address := range bccAddresses {
 			if isEmailInvalid(address) {
-				return SendEmailRequest{}, errors.New("BCC-Address is invalid: " + address)
+				return nil, errors.New("BCC-Address is invalid: " + address)
 			}
 		}
 	}
@@ -102,12 +102,12 @@ func deserializeSendEmailRequest(reqBody string) (SendEmailRequest, error) {
 		sendEmailRequest.ReplyToAddresses = replyToAddresses
 		for _, address := range replyToAddresses {
 			if isEmailInvalid(address) {
-				return SendEmailRequest{}, errors.New("Reply-To-Address is invalid: " + address)
+				return nil, errors.New("Reply-To-Address is invalid: " + address)
 			}
 		}
 	}
 
-	return sendEmailRequest, nil
+	return &sendEmailRequest, nil
 }
 
 func isEmailInvalid(email string) bool {
@@ -128,7 +128,7 @@ func SendEmail(bodyString string, c *gin.Context, dataDir string, logDir string)
 		(request.Message.Body.Html.Data != "" || request.Message.Body.Text.Data != "") &&
 		len(request.Destination.ToAddresses) > 0) {
 
-		LogValidationErrors(&request)
+		LogValidationErrors(request)
 
 		return errors.New("one or more required fields was not sent")
 	}
@@ -171,7 +171,7 @@ func SendEmail(bodyString string, c *gin.Context, dataDir string, logDir string)
 	}
 
 	// Read file from templates/success.txt
-	successTemplate, err := os.ReadFile("../../templates/success.xml")
+	successTemplate, err := os.ReadFile("../templates/success.xml")
 	if err != nil {
 		return err
 	}

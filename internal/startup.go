@@ -63,7 +63,7 @@ func handler(c *gin.Context) {
 func StartServer() {
 	// Read environment variables
 	ReadConfigFromEnv()
-	logrus.Info("Starting mock server under port 8080")
+	logrus.Info("Starting mock server under port ", Config.Port)
 
 	// Endpoints
 	r := gin.Default()
