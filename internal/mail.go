@@ -4,9 +4,10 @@ import (
 	"errors"
 	"fmt"
 	"github.com/gin-gonic/gin"
-	"github.com/gin-gonic/gin/binding"
 	"github.com/sirupsen/logrus"
 	"net/http"
+	"net/mail"
+	"net/url"
 	"os"
 	"path/filepath"
 	"strings"
@@ -45,10 +46,78 @@ type SendEmailRequest struct {
 	ReplyToAddresses []string    `json:"ReplyToAddresses"`
 }
 
-func SendEmail(c *gin.Context, dataDir string, logDir string) error {
-	var request SendEmailRequest
+func deserializeSendEmailRequest(reqBody string) (SendEmailRequest, error) {
+	queryValues, err := url.ParseQuery(reqBody)
+	if err != nil {
+		// handle error
+	}
 
-	err := c.ShouldBindBodyWith(&request, binding.JSON)
+	toAddresses := []string{queryValues.Get("Destination.ToAddresses.member.1")}
+
+	// Then, initialize the struct fields using the map values
+	sendEmailRequest := SendEmailRequest{
+		Action: queryValues.Get("Action"),
+		Destination: Destination{
+			ToAddresses: toAddresses,
+		},
+		Message: Message{
+			Body: Body{
+				Html: Content{
+					Data: queryValues.Get("Message.Body.Html.Data"),
+				},
+			},
+			Subject: Subject{
+				Data: queryValues.Get("Message.Subject.Data"),
+			},
+		},
+		Source: queryValues.Get("Source"),
+	}
+
+	for _, address := range toAddresses {
+		if isEmailInvalid(address) {
+			return SendEmailRequest{}, errors.New("To-Address is invalid: " + address)
+		}
+	}
+
+	// Optional fields
+	if ccAddresses, ok := queryValues["Destination.CcAddresses.member.1"]; ok {
+		sendEmailRequest.Destination.CcAddresses = ccAddresses
+		for _, address := range ccAddresses {
+			if isEmailInvalid(address) {
+				return SendEmailRequest{}, errors.New("CC-Address is invalid: " + address)
+			}
+		}
+	}
+
+	if bccAddresses, ok := queryValues["Destination.BccAddresses.member.1"]; ok {
+		sendEmailRequest.Destination.BccAddresses = bccAddresses
+		for _, address := range bccAddresses {
+			if isEmailInvalid(address) {
+				return SendEmailRequest{}, errors.New("BCC-Address is invalid: " + address)
+			}
+		}
+	}
+
+	if replyToAddresses, ok := queryValues["ReplyToAddresses.member.1"]; ok {
+		sendEmailRequest.ReplyToAddresses = replyToAddresses
+		for _, address := range replyToAddresses {
+			if isEmailInvalid(address) {
+				return SendEmailRequest{}, errors.New("Reply-To-Address is invalid: " + address)
+			}
+		}
+	}
+
+	return sendEmailRequest, nil
+}
+
+func isEmailInvalid(email string) bool {
+	_, err := mail.ParseAddress(email)
+	return err != nil
+}
+
+func SendEmail(bodyString string, c *gin.Context, dataDir string, logDir string) error {
+	request, err := deserializeSendEmailRequest(bodyString)
+
 	if err != nil {
 		return err
 	}
@@ -102,7 +171,7 @@ func SendEmail(c *gin.Context, dataDir string, logDir string) error {
 	}
 
 	// Read file from templates/success.txt
-	successTemplate, err := os.ReadFile("../templates/success.xml")
+	successTemplate, err := os.ReadFile("../../templates/success.xml")
 	if err != nil {
 		return err
 	}
