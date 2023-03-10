@@ -173,6 +173,7 @@ func SendEmail(bodyString string, c *gin.Context, dataDir string, logDir string)
 	// Read file from templates/success.txt
 	successTemplate, err := os.ReadFile("../templates/success.xml")
 	if err != nil {
+		logrus.Error("Cannot open template success file: ", err)
 		return err
 	}
 
