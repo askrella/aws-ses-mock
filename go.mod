@@ -6,7 +6,7 @@ require (
 	github.com/aws/aws-sdk-go-v2 v1.17.5
 	github.com/aws/aws-sdk-go-v2/config v1.18.15
 	github.com/aws/aws-sdk-go-v2/service/ses v1.15.3
-	github.com/caarlos0/env/v7 v7.0.0
+	github.com/caarlos0/env/v7 v7.1.0
 	github.com/gin-gonic/gin v1.9.0
 	github.com/onsi/ginkgo v1.16.5
 	github.com/onsi/gomega v1.27.1
