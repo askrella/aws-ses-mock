@@ -9,7 +9,7 @@ require (
 	github.com/caarlos0/env/v7 v7.0.0
 	github.com/gin-gonic/gin v1.9.0
 	github.com/onsi/ginkgo v1.16.5
-	github.com/onsi/gomega v1.27.1
+	github.com/onsi/gomega v1.27.3
 	github.com/sirupsen/logrus v1.9.0
 )
 
