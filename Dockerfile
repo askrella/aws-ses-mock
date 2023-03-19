@@ -21,7 +21,9 @@ RUN mkdir -p /build/bin && \
 
 FROM alpine:2.6
 
-WORKDIR /app
+# Set our workdir to /bin since the binary expects the assets to be located under ../assets
+WORKDIR /app/bin
+
 COPY --from=Build /build/bin/main /app/bin/main
 COPY --from=Build /build/assets /app/assets
 
