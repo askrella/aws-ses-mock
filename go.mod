@@ -5,7 +5,7 @@ go 1.19
 require (
 	github.com/aws/aws-sdk-go-v2 v1.17.6
 	github.com/aws/aws-sdk-go-v2/config v1.18.18
-	github.com/aws/aws-sdk-go-v2/service/ses v1.15.3
+	github.com/aws/aws-sdk-go-v2/service/ses v1.15.4
 	github.com/caarlos0/env/v7 v7.0.0
 	github.com/gin-gonic/gin v1.9.0
 	github.com/onsi/ginkgo v1.16.5
