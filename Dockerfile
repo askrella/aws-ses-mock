@@ -15,8 +15,8 @@ RUN apk add tree
 RUN tree
 
 RUN go build -o ./main ./cmd/main.go
-RUN mkdir /build && \
-    mv main /build/bin/main && \
+RUN mkdir -p /build/bin && \
+    mv ./main /build/bin/main && \
     mv ./assets /build/assets
 
 FROM alpine:2.6
