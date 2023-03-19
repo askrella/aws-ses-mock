@@ -16,7 +16,7 @@ Our goal is to provide more features, small containers and be more accurate than
 ## Running the Docker Container
 
 ```bash
-docker run -p 8080:8080 ghcr.io/askrella/aws-ses-mock:1.0.1
+docker run -p 8081:8081 ghcr.io/askrella/aws-ses-mock:1.0.1
 ```
 
 ## Usage with NodeJS
