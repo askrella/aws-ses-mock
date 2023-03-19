@@ -9,21 +9,23 @@ RUN go mod download
 
 COPY ./cmd ./cmd
 COPY ./internal ./internal
-COPY ./templates ./templates
+COPY ./assets ./assets
 
 RUN apk add tree
 RUN tree
 
 RUN go build -o ./main ./cmd/main.go
 RUN mkdir /build && \
-    mv main /build/main
+    mv main /build/bin/main && \
+    mv ./assets /build/assets
 
 FROM alpine:2.6
 
 WORKDIR /app
-COPY --from=Build /build/main /app/main
+COPY --from=Build /build/bin/main /app/bin/main
+COPY --from=Build /build/assets /app/assets
 
 ENV GIN_MODE=release
 
-EXPOSE 8080
-ENTRYPOINT [ "/app/main" ]
+EXPOSE 8081
+ENTRYPOINT [ "/app/bin/main" ]
