@@ -1,4 +1,6 @@
-FROM golang:1.20-alpine AS Build
+ARG TARGETARCH
+
+FROM --platform=$TARGETARCH golang:1.20-alpine AS Build
 
 WORKDIR /usr/local/go/src/github.com/aws-ses-mock
 
