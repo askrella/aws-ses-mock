@@ -3,6 +3,8 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 ![Docker](https://github.com/askrella/whatsapp-chatgpt/actions/workflows/docker.yml/badge.svg)
+![Docker AMD64](https://img.shields.io/badge/docker-amd64-blue)
+![Docker ARM64](https://img.shields.io/badge/docker-arm64-green)
 ![Build](https://img.shields.io/github/actions/workflow/status/askrella/aws-ses-mock/docker.yml?branch=master)
 
 
@@ -16,7 +18,7 @@ Our goal is to provide more features, small containers and be more accurate than
 ## Running the Docker Container
 
 ```bash
-docker run -p 8081:8081 ghcr.io/askrella/aws-ses-mock:1.0.1
+docker run -p 8081:8081 ghcr.io/askrella/aws-ses-mock:1.0.26
 ```
 
 ## Usage with NodeJS
